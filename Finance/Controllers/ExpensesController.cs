@@ -1,7 +1,7 @@
 using Finance.Contract.Expense;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Expense.Controllers;
+namespace Finance.Controllers;
 
 public class ExpenseController : ControllerBase
 {

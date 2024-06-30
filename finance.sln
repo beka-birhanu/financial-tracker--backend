@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "finance", "finance\finance.csproj", "{FB32651E-724B-43C8-82A6-FAA4E90F056B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finance", "Finance\Finance.csproj", "{FB32651E-724B-43C8-82A6-FAA4E90F056B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "finance.contract", "finance.contract\finance.contract.csproj", "{BCEB9545-5314-44C3-ABCE-011698933E5C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finance.Contract", "Finance.Contract\Finance.Contract.csproj", "{BCEB9545-5314-44C3-ABCE-011698933E5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
