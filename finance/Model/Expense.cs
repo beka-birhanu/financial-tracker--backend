@@ -4,13 +4,13 @@ namespace Finance.Models;
 
 public class Expense
 {
-  public int Id { get; }
+  public Guid Id { get; }
   public string Title { get; }
   public int Amount { get; }
   public DateTime Date { get; }
 
 
-  private Expense(int id, string title, int amount, DateTime date)
+  private Expense(Guid id, string title, int amount, DateTime date)
   {
     Id = id;
     Title = title;
@@ -37,10 +37,10 @@ public class Expense
         );
   }
 
-  public static Expense Create(string title, int amount, DateTime date, int? id = null)
+  public static Expense Create(string title, int amount, DateTime date, Guid? id = null)
   {
     return new Expense(
-        id ?? 1,
+        id ?? Guid.NewGuid(),
         title,
         amount,
         date

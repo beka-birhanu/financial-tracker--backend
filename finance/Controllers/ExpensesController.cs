@@ -18,20 +18,20 @@ public class ExpenseController : ControllerBase
     return Ok("create");
   }
 
-  [HttpGet("{id: int}")]
-  public IActionResult GetExpense()
+  [HttpGet("{id: guid}")]
+  public IActionResult GetExpense(Guid id)
   {
     return Ok("create");
   }
 
-  [HttpPut("{id: int}")]
-  public IActionResult UpsertExpense()
+  [HttpPut("{id: guid}")]
+  public IActionResult UpsertExpense(Guid id)
   {
     return Ok("create");
   }
 
-  [HttpDelete("{id: int}")]
-  public IActionResult DeletExpense()
+  [HttpDelete("{id: guid}")]
+  public IActionResult DeletExpense(Guid id)
   {
     return Ok("create");
   }
