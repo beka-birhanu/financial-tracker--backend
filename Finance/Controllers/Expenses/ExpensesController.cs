@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Finance.Services.Expenses;
 using Finance.Models;
 
-namespace Finance.Controllers;
+namespace Finance.Controllers.Expenses;
 
 [ApiController]
 [Route("[controller]")]
