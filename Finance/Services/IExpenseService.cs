@@ -1,12 +1,13 @@
 using ErrorOr;
+using Finance.Models;
 
 namespace Finance.Services.Expenses;
 
 public interface IExpenseService
 {
-  Created CreateExpense(Finance.Models.Expense expense);
-  Finance.Models.Expense GetExpense(Guid id);
-  List<Finance.Models.Expense> GetExpense();
-  UpsertedExpense UpsertExpense(Finance.Models.Expense expense);
+  Created CreateExpense(Expense expense);
+  Expense GetExpense(Guid id);
+  List<Expense> GetExpense();
+  UpsertedExpense UpsertExpense(Expense expense);
   Deleted DeleteExpense(Guid id);
 }
