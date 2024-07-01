@@ -1,4 +1,4 @@
-# Financial Tracker Back-End
+# Financial Tracker
 
 This is a back-end for a Financial-tracker, an app I made to learn React and to learn the basics of CRUD RESTful API in C#.
 
@@ -13,7 +13,7 @@ This is a back-end for a Financial-tracker, an app I made to learn React and to 
 Simply clone the repository and run the command:
 
 ```bash
-dotnet run --project finance
+dotnet run --project Finance
 ```
 
 ## API Definition
