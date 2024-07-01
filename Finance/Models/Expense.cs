@@ -6,10 +6,10 @@ namespace Finance.Models;
 
 public class Expense
 {
-  public Guid Id { get; }
-  public string Title { get; }
-  public float Amount { get; }
-  public DateTime Date { get; }
+  public Guid Id { get; set; }
+  public string Title { get; set; }
+  public float Amount { get; set; }
+  public DateTime Date { get; set; }
 
 
   private Expense(Guid id, string title, float amount, DateTime date)
