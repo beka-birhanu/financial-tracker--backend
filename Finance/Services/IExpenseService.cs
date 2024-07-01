@@ -1,13 +1,15 @@
 using ErrorOr;
 using Finance.Models;
 
+
 namespace Finance.Services.Expenses;
 
 public interface IExpenseService
 {
-  ErrorOr<Created> CreateExpense(Expense expense);
-  ErrorOr<Expense> GetExpense(Guid id);
-  ErrorOr<List<Expense>> GetExpense();
-  ErrorOr<UpsertedExpense> UpsertExpense(Expense expense);
-  ErrorOr<Deleted> DeleteExpense(Guid id);
+  Task<ErrorOr<Created>> CreateExpenseAsync(Expense expense);
+  Task<ErrorOr<Expense>> GetExpenseAsync(Guid id);
+  Task<ErrorOr<List<Expense>>> GetExpensesAsync();
+  Task<ErrorOr<UpsertedExpense>> UpsertExpenseAsync(Expense expense);
+  Task<ErrorOr<Deleted>> DeleteExpenseAsync(Guid id);
 }
+
