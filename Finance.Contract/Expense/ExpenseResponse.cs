@@ -1,8 +1,8 @@
 namespace Finance.Contract.Expense;
 
-public record GetExpenseResponse(
+public record ExpenseResponse(
     Guid id,
     string title,
-    int amount,
+    float amount,
     DateTime date
     );
