@@ -6,11 +6,11 @@ public class Expense
 {
   public Guid Id { get; }
   public string Title { get; }
-  public int Amount { get; }
+  public float Amount { get; }
   public DateTime Date { get; }
 
 
-  private Expense(Guid id, string title, int amount, DateTime date)
+  private Expense(Guid id, string title, float amount, DateTime date)
   {
     Id = id;
     Title = title;
@@ -27,17 +27,17 @@ public class Expense
         );
   }
 
-  public static Expense From(UpsertExpenseRequest request)
+  public static Expense From(Guid id, UpsertExpenseRequest request)
   {
     return Create(
         request.title,
         request.amount,
         request.date,
-        request.id
+        id
         );
   }
 
-  public static Expense Create(string title, int amount, DateTime date, Guid? id = null)
+  public static Expense Create(string title, float amount, DateTime date, Guid? id = null)
   {
     return new Expense(
         id ?? Guid.NewGuid(),
