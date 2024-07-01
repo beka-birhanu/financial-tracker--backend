@@ -2,6 +2,6 @@ namespace Finance.Contract.Expense;
 
 public record CreateExpenseRequest(
     string title,
-    int amount,
+    float amount,
     DateTime date
     );
