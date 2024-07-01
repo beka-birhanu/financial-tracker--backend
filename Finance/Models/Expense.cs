@@ -1,4 +1,6 @@
+using ErrorOr;
 using Finance.Contract.Expense;
+using Finance.Errors;
 
 namespace Finance.Models;
 
@@ -18,7 +20,7 @@ public class Expense
     Date = date;
   }
 
-  public static Expense From(CreateExpenseRequest request)
+  public static ErrorOr<Expense> From(CreateExpenseRequest request)
   {
     return Create(
         request.title,
@@ -27,7 +29,7 @@ public class Expense
         );
   }
 
-  public static Expense From(Guid id, UpsertExpenseRequest request)
+  public static ErrorOr<Expense> From(Guid id, UpsertExpenseRequest request)
   {
     return Create(
         request.title,
@@ -37,8 +39,17 @@ public class Expense
         );
   }
 
-  public static Expense Create(string title, float amount, DateTime date, Guid? id = null)
+  public static ErrorOr<Expense> Create(string title, float amount, DateTime date, Guid? id = null)
   {
+    List<Error> errors = new();
+
+    if (amount == 0)
+    {
+      errors.Add(ServiceError.Expense.InvalidAmount);
+
+      return errors;
+    }
+
     return new Expense(
         id ?? Guid.NewGuid(),
         title,

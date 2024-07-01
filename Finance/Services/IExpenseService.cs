@@ -5,9 +5,9 @@ namespace Finance.Services.Expenses;
 
 public interface IExpenseService
 {
-  Created CreateExpense(Expense expense);
-  Expense GetExpense(Guid id);
-  List<Expense> GetExpense();
-  UpsertedExpense UpsertExpense(Expense expense);
-  Deleted DeleteExpense(Guid id);
+  ErrorOr<Created> CreateExpense(Expense expense);
+  ErrorOr<Expense> GetExpense(Guid id);
+  ErrorOr<List<Expense>> GetExpense();
+  ErrorOr<UpsertedExpense> UpsertExpense(Expense expense);
+  ErrorOr<Deleted> DeleteExpense(Guid id);
 }

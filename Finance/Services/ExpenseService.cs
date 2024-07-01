@@ -1,4 +1,5 @@
 using ErrorOr;
+using Finance.Errors;
 using Finance.Models;
 
 namespace Finance.Services.Expenses;
@@ -7,25 +8,29 @@ public class ExpenseService : IExpenseService
 {
   private static readonly Dictionary<Guid, Expense> _expenses = new();
 
-  public Created CreateExpense(Expense expense)
+  public ErrorOr<Created> CreateExpense(Expense expense)
   {
     _expenses.Add(expense.Id, expense);
 
     return Result.Created;
   }
 
-  public Expense GetExpense(Guid id)
+  public ErrorOr<Expense> GetExpense(Guid id)
   {
+    if (_expenses.TryGetValue(id, out var expense))
+    {
+      return expense;
+    }
 
-    return _expenses[id];
+    return ServiceError.Expense.NotFound;
   }
 
-  public List<Expense> GetExpense()
+  public ErrorOr<List<Expense>> GetExpense()
   {
     return _expenses.Values.ToList();
   }
 
-  public UpsertedExpense UpsertExpense(Expense expense)
+  public ErrorOr<UpsertedExpense> UpsertExpense(Expense expense)
   {
     var isNewlyCreated = !_expenses.ContainsKey(expense.Id);
     _expenses[expense.Id] = expense;
@@ -33,8 +38,12 @@ public class ExpenseService : IExpenseService
     return new UpsertedExpense(isNewlyCreated);
   }
 
-  public Deleted DeleteExpense(Guid id)
+  public ErrorOr<Deleted> DeleteExpense(Guid id)
   {
+    if (!_expenses.ContainsKey(id))
+    {
+      return ServiceError.Expense.NotFound;
+    }
     _expenses.Remove(id);
 
     return Result.Deleted;
