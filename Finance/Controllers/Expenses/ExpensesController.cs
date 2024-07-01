@@ -11,83 +11,82 @@ namespace Finance.Controllers.Expenses;
 [Route("[controller]")]
 public class ExpensesController : ControllerBase
 {
-  private readonly IExpenseService _expenseServiece;
+  private readonly IExpenseService _expenseService;
 
-  public ExpensesController(IExpenseService expenseServiece)
+  public ExpensesController(IExpenseService expenseService)
   {
-    _expenseServiece = expenseServiece;
+    _expenseService = expenseService;
   }
 
   [HttpPost]
-  public IActionResult CreateExpense(CreateExpenseRequest request)
+  public async Task<IActionResult> CreateExpenseAsync(CreateExpenseRequest request)
   {
-    ErrorOr<Expense> requestToExpenseResponse = Expense.From(request);
+    ErrorOr<Expense> requestToExpenseResult = Expense.From(request);
 
-    if (requestToExpenseResponse.IsError)
+    if (requestToExpenseResult.IsError)
     {
-      return Problem(requestToExpenseResponse.Errors);
+      return Problem(requestToExpenseResult.Errors);
     }
 
-    Expense expense = requestToExpenseResponse.Value;
-    ErrorOr<Created> createExpenseResponse = _expenseServiece.CreateExpense(expense);
+    Expense expense = requestToExpenseResult.Value;
+    ErrorOr<Created> createExpenseResult = await _expenseService.CreateExpenseAsync(expense);
 
-
-    return createExpenseResponse.Match(
+    return createExpenseResult.Match(
         created => CreatedAtGetExpense(expense),
         errors => Problem(errors)
-        );
+    );
   }
 
   [HttpGet]
-  public IActionResult GetExpenseList()
+  public async Task<IActionResult> GetExpenseListAsync()
   {
-    ErrorOr<List<Expense>> getExpenseResult = _expenseServiece.GetExpense();
+    ErrorOr<List<Expense>> getExpenseResult = await _expenseService.GetExpensesAsync();
 
     return getExpenseResult.Match(
         expenses => Ok(MapExpenseListResponse(expenses)),
         errors => Problem(errors)
-        );
+    );
   }
 
-
   [HttpGet("{id:guid}")]
-  public IActionResult GetExpense(Guid id)
+  public async Task<IActionResult> GetExpenseAsync(Guid id)
   {
-    ErrorOr<Expense> getExpenseResult = _expenseServiece.GetExpense(id);
+    ErrorOr<Expense> getExpenseResult = await _expenseService.GetExpenseAsync(id);
 
     return getExpenseResult.Match(
         expense => Ok(MapExpenseResponse(expense)),
         errors => Problem(errors)
-        );
+    );
   }
 
   [HttpPut("{id:guid}")]
-  public IActionResult UpsertExpense(Guid id, UpsertExpenseRequest request)
+  public async Task<IActionResult> UpsertExpenseAsync(Guid id, UpsertExpenseRequest request)
   {
-    ErrorOr<Expense> upsertExpenseResponse = Expense.From(id, request);
+    ErrorOr<Expense> upsertExpenseResult = Expense.From(id, request);
 
-    if (upsertExpenseResponse.IsError)
+    if (upsertExpenseResult.IsError)
     {
-      return Problem(upsertExpenseResponse.Errors);
+      return Problem(upsertExpenseResult.Errors);
     }
 
-    Expense expense = upsertExpenseResponse.Value;
-    ErrorOr<UpsertedExpense> upsertedExpenseResponse = _expenseServiece.UpsertExpense(expense);
+    Expense expense = upsertExpenseResult.Value;
+    ErrorOr<UpsertedExpense> upsertedExpenseResult = await _expenseService.UpsertExpenseAsync(expense);
 
-    return upsertedExpenseResponse.Match(
+    return upsertedExpenseResult.Match(
         upserted => upserted.IsNewlyCreated ? CreatedAtGetExpense(expense) : NoContent(),
         errors => Problem(errors)
-        );
+    );
   }
 
   [HttpDelete("{id:guid}")]
-  public IActionResult DeletExpense(Guid id)
+  public async Task<IActionResult> DeleteExpenseAsync(Guid id)
   {
-    ErrorOr<Deleted> deleteExpenseResponse = _expenseServiece.DeleteExpense(id);
-    return deleteExpenseResponse.Match(
+    ErrorOr<Deleted> deleteExpenseResult = await _expenseService.DeleteExpenseAsync(id);
+
+    return deleteExpenseResult.Match(
         deleted => NoContent(),
         errors => Problem(errors)
-        );
+    );
   }
 
   private ExpenseListResponse MapExpenseListResponse(List<Expense> expenses)
@@ -102,16 +101,16 @@ public class ExpensesController : ControllerBase
         expense.Title,
         expense.Amount,
         expense.Date
-        );
+    );
   }
 
   private CreatedAtActionResult CreatedAtGetExpense(Expense expense)
   {
     return CreatedAtAction(
-        actionName: nameof(GetExpense),
+        actionName: nameof(GetExpenseAsync),
         routeValues: new { id = expense.Id },
         value: MapExpenseResponse(expense)
-        );
+    );
   }
 
   private IActionResult Problem(List<Error> errors)
@@ -146,3 +145,4 @@ public class ExpensesController : ControllerBase
     return Problem(statusCode: statusCode, title: firstError.Description);
   }
 }
+
