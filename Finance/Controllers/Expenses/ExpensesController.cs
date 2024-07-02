@@ -4,6 +4,7 @@ using Finance.Services.Expenses;
 using Finance.Models;
 using ErrorOr;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Finance.Services.Pagination;
 
 namespace Finance.Controllers.Expenses;
 
@@ -38,12 +39,12 @@ public class ExpensesController : ControllerBase
   }
 
   [HttpGet]
-  public async Task<IActionResult> GetExpenseListAsync()
+  public async Task<IActionResult> GetExpenseListAsync([FromQuery] GetExpenseListQueryParams queryParams)
   {
-    ErrorOr<List<Expense>> getExpenseResult = await _expenseService.GetExpensesAsync();
+    ErrorOr<PaginationResult<Expense>> getPaginatedExpenseResult = await _expenseService.GetExpensesAsync(queryParams);
 
-    return getExpenseResult.Match(
-        expenses => Ok(MapExpenseListResponse(expenses)),
+    return getPaginatedExpenseResult.Match(
+        paginatedResult => Ok(MapPaginatedExpenseListResponse(paginatedResult)),
         errors => Problem(errors)
     );
   }
@@ -89,9 +90,18 @@ public class ExpensesController : ControllerBase
     );
   }
 
-  private ExpenseListResponse MapExpenseListResponse(List<Expense> expenses)
+  private PaginatedExpenseListResponse MapPaginatedExpenseListResponse(PaginationResult<Expense> paginatedExpenses)
   {
-    return new ExpenseListResponse(expenses.Select(MapExpenseResponse).ToList());
+    List<ExpenseResponse> expenses = paginatedExpenses.Data
+        .Select(expense => MapExpenseResponse(expense))
+        .ToList();
+
+    return new PaginatedExpenseListResponse
+      (expenses,
+       paginatedExpenses.TotalCount,
+       paginatedExpenses.PageNumber,
+       paginatedExpenses.PageSize)
+    ;
   }
 
   private static ExpenseResponse MapExpenseResponse(Expense expense)
