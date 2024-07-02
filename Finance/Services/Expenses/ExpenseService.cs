@@ -1,8 +1,10 @@
 using ErrorOr;
+using Finance.Contract.Expense;
 using Finance.Data;
 using Finance.Errors;
 using Finance.Models;
-using Microsoft.EntityFrameworkCore;
+using Finance.Services.FilterSort;
+using Finance.Services.Pagination;
 
 
 namespace Finance.Services.Expenses;
@@ -10,10 +12,14 @@ namespace Finance.Services.Expenses;
 public class ExpenseService : IExpenseService
 {
   private readonly ExpenseContext _expenseContext;
+  private readonly IPaginationStrategy<Expense> _paginationStrategy;
+  private readonly IFilterSortStrategy<Expense> _filterSortStrategy;
 
-  public ExpenseService(ExpenseContext expenseContext)
+  public ExpenseService(ExpenseContext expenseContext, IPaginationStrategy<Expense> paginagionStrategy, IFilterSortStrategy<Expense> filterSortStrategy)
   {
     _expenseContext = expenseContext;
+    _paginationStrategy = paginagionStrategy;
+    _filterSortStrategy = filterSortStrategy;
   }
 
   public async Task<ErrorOr<Created>> CreateExpenseAsync(Expense expense)
@@ -35,10 +41,31 @@ public class ExpenseService : IExpenseService
     return expense;
   }
 
-  public async Task<ErrorOr<List<Expense>>> GetExpensesAsync()
+  public async Task<ErrorOr<PaginationResult<Expense>>> GetExpensesAsync(GetExpenseListQueryParams queryParams)
   {
-    return await _expenseContext.Expenses.ToListAsync();
+    var query = _expenseContext.Expenses.AsQueryable();
+
+    Console.WriteLine(queryParams);
+    if (queryParams.Filter != null)
+    {
+      query = _filterSortStrategy.ApplyFilter(query, queryParams.Filter.filterValue, queryParams.Filter.filterField);
+    }
+
+    if (queryParams.Sort != null)
+    {
+      query = _filterSortStrategy.ApplySort(query, queryParams.Sort.sortOrder, queryParams.Sort.sortField);
+    }
+    else
+    {
+      // Default sort
+      query = _filterSortStrategy.ApplySort(query, "asc", "Date");
+    }
+
+    PaginationResult<Expense> paginatedResult = await _paginationStrategy.PaginateAsync(query, queryParams.pageNumber, queryParams.pageSize);
+
+    return paginatedResult;
   }
+
 
   public async Task<ErrorOr<UpsertedExpense>> UpsertExpenseAsync(Expense expense)
   {
