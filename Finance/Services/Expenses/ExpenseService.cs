@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 
 namespace Finance.Services.Expenses;
+
 public class ExpenseService : IExpenseService
 {
   private readonly ExpenseContext _expenseContext;
