@@ -10,7 +10,8 @@ public class FilterSortStrategy<T> : IFilterSortStrategy<T>
     {
       try
       {
-        query = query.Where(e => EF.Property<string>(e, filterField).Contains(filterValue, StringComparison.OrdinalIgnoreCase));
+        filterValue = filterValue.ToLower();
+        query = query.Where(e => EF.Property<string>(e, filterField).ToLower().Contains(filterValue));
       }
       catch (Exception ex)
       {
@@ -36,7 +37,6 @@ public class FilterSortStrategy<T> : IFilterSortStrategy<T>
         else
         {
           query = query.Where(e => EF.Property<int>(e, filterField) == filterValue);
-
         }
       }
       catch (Exception ex)
