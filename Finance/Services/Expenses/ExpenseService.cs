@@ -45,26 +45,33 @@ public class ExpenseService : IExpenseService
   {
     var query = _expenseContext.Expenses.AsQueryable();
 
-    Console.WriteLine(queryParams);
-    if (queryParams.Filter != null)
+    if (!string.IsNullOrEmpty(queryParams.filterField) && !string.IsNullOrEmpty(queryParams.filterValue))
     {
-      query = _filterSortStrategy.ApplyFilter(query, queryParams.Filter.filterValue, queryParams.Filter.filterField);
+      if (queryParams.filterField.ToLower() == "amount")
+      {
+        if (int.TryParse(queryParams.filterValue, out var amount))
+        {
+          query = _filterSortStrategy.ApplyFilter(query, amount, queryParams.filterField);
+        }
+        else
+        {
+          return Error.Validation("InvalidfilterValue", "filterValue for Amount must be a valid decimal number.");
+        }
+      }
+      else
+      {
+        query = _filterSortStrategy.ApplyFilter(query, queryParams.filterValue, queryParams.filterField);
+      }
     }
 
-    if (queryParams.Sort != null)
-    {
-      query = _filterSortStrategy.ApplySort(query, queryParams.Sort.sortOrder, queryParams.Sort.sortField);
-    }
-    else
-    {
-      // Default sort
-      query = _filterSortStrategy.ApplySort(query, "asc", "Date");
-    }
+    query = _filterSortStrategy.ApplySort(query, queryParams.sortOrder, queryParams.sortField);
 
     PaginationResult<Expense> paginatedResult = await _paginationStrategy.PaginateAsync(query, queryParams.pageNumber, queryParams.pageSize);
 
     return paginatedResult;
   }
+
+
 
 
   public async Task<ErrorOr<UpsertedExpense>> UpsertExpenseAsync(Expense expense)

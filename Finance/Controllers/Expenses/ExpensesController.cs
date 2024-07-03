@@ -41,6 +41,11 @@ public class ExpensesController : ControllerBase
   [HttpGet]
   public async Task<IActionResult> GetExpenseListAsync([FromQuery] GetExpenseListQueryParams queryParams)
   {
+    if (!ModelState.IsValid)
+    {
+      return BadRequest(ModelState);
+    }
+
     ErrorOr<PaginationResult<Expense>> getPaginatedExpenseResult = await _expenseService.GetExpensesAsync(queryParams);
 
     return getPaginatedExpenseResult.Match(
@@ -48,7 +53,6 @@ public class ExpensesController : ControllerBase
         errors => Problem(errors)
     );
   }
-
   [HttpGet("{id:guid}")]
   public async Task<IActionResult> GetExpenseAsync(Guid id)
   {
