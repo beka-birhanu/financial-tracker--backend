@@ -55,10 +55,10 @@ Location: {{host}}/expenses/{{id}}
 
 ### Get Expenses
 
-#### Get All Request
+#### Get Bulk Request
 
 ```
-GET /expenses
+GET /expenses?pageNumber={yourPart}&pageSize={yourPart}&filterField={yourPart}&filterValue={yourPart}&sortField={yourPart}&sortOrder={yourPart}
 ```
 
 #### Response
@@ -66,43 +66,64 @@ GET /expenses
 ```
 200 OK
 ```
+
+````json
 
 ```json
 {
   "expenses": [
     {
-      "id": "00000000-0000-0000-0000-000000000000",
+      "id": "286d7bbf-e6e0-4bfd-b4e0-906a613193db",
+      "title": "Car Repair",
+      "amount": 350.5,
+      "date": "2024-02-15T08:00:00"
+    },
+    {
+      "id": "3f91f017-af32-46b3-9c53-47adb1314c9a",
       "title": "Groceries",
-      "amount": 279.7,
-      "date": "2024-06-08T08:00:00"
+      "amount": 75.3,
+      "date": "2024-03-10T08:00:00"
     },
     {
-      "id": "00000000-0000-0000-0000-000000000001",
-      "title": "Tea",
-      "amount": 29,
-      "date": "2024-06-08T08:00:00"
+      "id": "9faf45e0-38c5-4c27-b9d8-f6b04b719060",
+      "title": "Electric Bill",
+      "amount": 120.75,
+      "date": "2024-04-05T08:00:00"
     },
     {
-      "id": "00000000-0000-0000-0000-000000000002",
-      "title": "Lollipop",
-      "amount": 7,
-      "date": "2024-06-08T08:00:00"
+      "id": "805795d0-f73d-4334-94af-ce4fab83e142",
+      "title": "Dinner Out",
+      "amount": 60.2,
+      "date": "2024-04-18T08:00:00"
+    },
+    {
+      "id": "537126c9-f485-4674-900e-c77ae349c25f",
+      "title": "Movie Tickets",
+      "amount": 45.0,
+      "date": "2024-05-01T08:00:00"
     }
-  ]
+  ],
+  "totalCount": 5,
+  "pageNumber": 1,
+  "pageSize": 10
 }
-```
+
 
 #### Get One Request
 
-```
+````
+
 GET /expenses/{{id}}
+
 ```
 
 #### Response
 
 ```
+
 200 OK
-```
+
+````
 
 ```json
 {
@@ -111,7 +132,7 @@ GET /expenses/{{id}}
   "amount": 279.7,
   "date": "2024-06-08T08:00:00"
 }
-```
+````
 
 ### Update Expense
 
