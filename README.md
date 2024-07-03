@@ -107,11 +107,9 @@ GET /expenses?pageNumber={yourPart}&pageSize={yourPart}&filterField={yourPart}&f
   "pageNumber": 1,
   "pageSize": 10
 }
-
+````
 
 #### Get One Request
-
-````
 
 GET /expenses/{{id}}
 
