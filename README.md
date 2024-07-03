@@ -67,8 +67,6 @@ GET /expenses?pageNumber={yourPart}&pageSize={yourPart}&filterField={yourPart}&f
 200 OK
 ```
 
-````json
-
 ```json
 {
   "expenses": [
@@ -107,21 +105,19 @@ GET /expenses?pageNumber={yourPart}&pageSize={yourPart}&filterField={yourPart}&f
   "pageNumber": 1,
   "pageSize": 10
 }
-````
+```
 
 #### Get One Request
 
+```
 GET /expenses/{{id}}
-
 ```
 
 #### Response
 
 ```
-
 200 OK
-
-````
+```
 
 ```json
 {
@@ -130,7 +126,7 @@ GET /expenses/{{id}}
   "amount": 279.7,
   "date": "2024-06-08T08:00:00"
 }
-````
+```
 
 ### Update Expense
 
