@@ -16,7 +16,7 @@ Simply clone the repository and run the command:
 dotnet run --project Finance
 ```
 
-## API Definition
+## API Definition (Expense)
 
 ### Create Expense
 
@@ -167,6 +167,93 @@ Location: {{host}}/expenses/{{id}}
 
 ```
 DELETE /expenses/{{id}}
+```
+
+#### Response
+
+```
+204 No Content
+```
+
+## API Definition (User)
+
+### Create User
+
+#### Request
+
+```
+Post /users
+```
+
+```json
+{
+  "firstName": "Beka",
+  "lastName": "Birhanu",
+  "email": "romareo@gmail.com",
+  "password": "************"
+}
+```
+
+#### Response
+
+```
+201 Created
+```
+
+```json
+{
+  "firstName": "Beka",
+  "lastName": "Birhanu",
+  "email": "romareo@gmail.com",
+  "token": "afldfkjasdflkjasldf.slfkdjsdflkasdfl.sjadfljasldkfj"
+}
+```
+
+## API Definition (Authentication)
+
+### Sign in
+
+#### Request
+
+```
+Post /auth/signIn
+```
+
+```json
+{
+  "email": "romareo@gmail.com",
+  "password": "************"
+}
+```
+
+#### Response
+
+```
+200 Ok
+```
+
+```json
+{
+  "firstName": "Beka",
+  "lastName": "Birhanu",
+  "email": "romareo@gmail.com",
+  "token": "afldfkjasdflkjasldf.slfkdjsdflkasdfl.sjadfljasldkfj"
+}
+```
+
+### Sign out
+
+#### Request
+
+```
+Post /auth/signOut
+```
+
+```json
+{
+  "email": "romareo@gmail.com",
+  "token": "afldfkjasdflkjasldf.slfkdjsdflkasdfl.sjadfljasldkfj"
+}
 ```
 
 #### Response
