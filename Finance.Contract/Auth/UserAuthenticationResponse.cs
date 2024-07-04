@@ -1,6 +1,6 @@
-namespace Finance.Contract.Users;
+namespace Finance.Contract.Auth;
 
-public record RegisterResponse(
+public record UserAuthenticationResponse(
   Guid id,
   string firstName,
   string lastName,

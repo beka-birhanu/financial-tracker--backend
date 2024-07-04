@@ -1,15 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Finance.Contract.Users;
+namespace Finance.Contract.Auth;
 
-public record RegisterRequest(
+public record UserRegisterationRequest(
   [Required(ErrorMessage = "firstName is required")]
   string firstName,
 
   [Required(ErrorMessage = "lastName is required")]
   string lastName,
 
-  [RegularExpression("/^[a-zA-Z0-9_.]+$/", ErrorMessage = "Invalid email format")]
+  [RegularExpression(@"^[a-zA-Z0-9_.]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email format")]
   string email,
 
   [MinLength(8)]

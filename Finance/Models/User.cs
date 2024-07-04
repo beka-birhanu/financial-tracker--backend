@@ -1,4 +1,4 @@
-using Finance.Contract.Users;
+using Finance.Contract.Auth;
 
 namespace Finance.Models;
 
@@ -19,7 +19,7 @@ public class User
     Password = password;
   }
 
-  public User From(RegisterRequest request)
+  public static User From(UserRegisterationRequest request)
   {
     // to do hash password
     string hashedPassword = request.password;
