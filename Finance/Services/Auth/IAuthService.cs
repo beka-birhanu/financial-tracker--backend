@@ -6,5 +6,5 @@ namespace Finance.Services.Auth;
 public interface IAuthService
 {
   public Task<Created> Register(User user);
-  public Task<User> SignIn(Guid id);
+  public Task<SignInResult> SignIn(string email, string password);
 }
