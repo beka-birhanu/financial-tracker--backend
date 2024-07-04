@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Finance.Contract.Auth;
 
-public record UserRegisterationRequest(
+public record UserRegistrationRequest(
   [Required(ErrorMessage = "firstName is required")]
   string firstName,
 

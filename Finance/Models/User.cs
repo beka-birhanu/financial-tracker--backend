@@ -19,7 +19,7 @@ public class User
     Password = password;
   }
 
-  public static User From(UserRegisterationRequest request)
+  public static User From(UserRegistrationRequest request)
   {
     // to do hash password
     string hashedPassword = request.password;
