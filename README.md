@@ -202,6 +202,7 @@ Post /users
 
 ```json
 {
+  "id": "00000000-0000-0000-0000-000000000000",
   "firstName": "Beka",
   "lastName": "Birhanu",
   "email": "romareo@gmail.com",
@@ -234,6 +235,7 @@ Post /auth/signIn
 
 ```json
 {
+  "id": "00000000-0000-0000-0000-000000000000",
   "firstName": "Beka",
   "lastName": "Birhanu",
   "email": "romareo@gmail.com",
