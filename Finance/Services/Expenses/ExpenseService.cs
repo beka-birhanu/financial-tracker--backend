@@ -35,7 +35,7 @@ public class ExpenseService : IExpenseService
     var expense = await _expenseContext.Expenses.FindAsync(id);
     if (expense is null)
     {
-      return ServiceError.Expense.NotFound;
+      return ServiceError.ExpenseError.NotFound;
     }
 
     return expense;
@@ -97,7 +97,7 @@ public class ExpenseService : IExpenseService
     var expense = await _expenseContext.Expenses.FindAsync(id);
     if (expense is null)
     {
-      return ServiceError.Expense.NotFound;
+      return ServiceError.ExpenseError.NotFound;
     }
 
     _expenseContext.Expenses.Remove(expense);

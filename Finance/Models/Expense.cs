@@ -45,7 +45,7 @@ public class Expense
 
     if (amount == 0)
     {
-      errors.Add(ServiceError.Expense.InvalidAmount);
+      errors.Add(ServiceError.ExpenseError.InvalidAmount);
 
       return errors;
     }
