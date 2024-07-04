@@ -17,6 +17,7 @@ public class AuthController : ControllerBase
   }
 
   [HttpPost]
+  [Route("signUp")]
   public async Task<IActionResult> RegisterAsync([FromBody] UserRegisterationRequest request)
   {
     Models.User requestToUser = Models.User.From(request);
@@ -25,11 +26,14 @@ public class AuthController : ControllerBase
     return Ok(MapUserAuthenticationResponse(requestToUser));
   }
 
-  // [HttpPost]
-  // public async Task<IActionResult> SignInAsync([FromBody] SignInRequest request)
-  // {
-  //   throw new NotImplementedException();
-  // }
+  [HttpPost]
+  [Route("signIn")]
+  public async Task<IActionResult> SignInAsync([FromBody] SignInRequest request)
+  {
+    var signInResponse = await _authService.SignIn(request.email, request.password);
+
+    return Ok(signInResponse);
+  }
 
   private UserAuthenticationResponse MapUserAuthenticationResponse(User user)
   {
