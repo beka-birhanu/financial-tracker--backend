@@ -1,13 +1,12 @@
 using Finance.Contract.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Finance.Services.Auth;
-using Finance.Models;
+using ErrorOr;
+using SignInResult = Finance.Services.Auth.SignInResult;
 
 namespace Finance.Controllers.Auth;
 
-[ApiController]
-[Route("[controller]")]
-public class AuthController : ControllerBase
+public class AuthController : ErrorHandlingBaseController
 {
   private readonly IAuthService _authService;
 
@@ -16,33 +15,46 @@ public class AuthController : ControllerBase
     _authService = authService;
   }
 
-  [HttpPost]
-  [Route("signUp")]
-  public async Task<IActionResult> RegisterAsync([FromBody] UserRegisterationRequest request)
+  [HttpPost("signUp")]
+  public async Task<IActionResult> RegisterAsync([FromBody] UserRegistrationRequest request)
   {
     Models.User requestToUser = Models.User.From(request);
-    await _authService.Register(requestToUser);
 
-    return Ok(MapUserAuthenticationResponse(requestToUser));
+    ErrorOr<Created> registerResult = await _authService.Register(requestToUser);
+
+    if (registerResult.IsError)
+    {
+      return Problem(registerResult.Errors);
+    }
+
+    var signInResponse = await _authService.SignIn(request.email, request.password);
+
+    return signInResponse.Match(
+        signInData => Ok(MapUserAuthenticationResponse(signInData)),
+        errors => Problem(errors)
+    );
   }
 
-  [HttpPost]
-  [Route("signIn")]
+  [HttpPost("signIn")]
   public async Task<IActionResult> SignInAsync([FromBody] SignInRequest request)
   {
     var signInResponse = await _authService.SignIn(request.email, request.password);
 
-    return Ok(signInResponse);
+    return signInResponse.Match(
+        signInData => Ok(MapUserAuthenticationResponse(signInData)),
+        errors => Problem(errors)
+    );
   }
 
-  private UserAuthenticationResponse MapUserAuthenticationResponse(User user)
+  private UserAuthenticationResponse MapUserAuthenticationResponse(SignInResult result)
   {
     return new UserAuthenticationResponse(
-        user.Id,
-        user.FirstName,
-        user.LastName,
-        user.Email,
-        "fkajsldkfjaskd"
-        );
+        result.Id,
+        result.FirstName,
+        result.LastName,
+        result.Email,
+        result.Token
+    );
   }
 }
+
