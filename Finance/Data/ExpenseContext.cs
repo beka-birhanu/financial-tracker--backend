@@ -9,5 +9,5 @@ public class ExpenseContext : DbContext
   {
   }
 
-  public DbSet<Expense> Expenses { get; set; }
+  public DbSet<Expense> Expenses { get; set; } = null!;
 }
