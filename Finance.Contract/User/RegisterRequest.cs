@@ -2,17 +2,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Finance.Contract.Users;
 
-public record RegisterRequest
-{
+public record RegisterRequest(
   [Required(ErrorMessage = "firstName is required")]
-  string firstName { get; init; } = null!;
+  string firstName,
 
   [Required(ErrorMessage = "lastName is required")]
-  string lastName { get; init; } = null!;
+  string lastName,
 
   [RegularExpression("/^[a-zA-Z0-9_.]+$/", ErrorMessage = "Invalid email format")]
-  string email { get; init; } = null!;
+  string email,
 
   [MinLength(8)]
-  string password { get; init; } = null!;
-}
+  string password
+);
