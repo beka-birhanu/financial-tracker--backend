@@ -2,6 +2,7 @@ using ErrorOr;
 using Finance.Data;
 using Finance.Models;
 using Microsoft.EntityFrameworkCore;
+using static Finance.Errors.ServiceError;
 
 namespace Finance.Services.Auth;
 
@@ -14,21 +15,73 @@ public class AuthService : IAuthService
     _userContext = userContext;
   }
 
-  public async Task<Created> Register(User user)
+  public async Task<ErrorOr<Created>> Register(User user)
   {
-    await _userContext.Users.AddAsync(user);
-    await _userContext.SaveChangesAsync();
+    var findExistingUserResult = await FindUserByEmail(user.Email);
+
+    if (!findExistingUserResult.IsError)
+    {
+      return UserError.EmailAlreadyUsed;
+    }
+
+    if (!CheckPasswordStrength(user.Password))
+    {
+      return AuthError.PasswordNotStrong;
+    }
+
+    try
+    {
+      await _userContext.Users.AddAsync(user);
+      await _userContext.SaveChangesAsync();
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine(ex.ToString());
+    }
 
     return Result.Created;
-
   }
 
-  public async Task<SignInResult> SignIn(string email, string password)
+  public async Task<ErrorOr<SignInResult>> SignIn(string email, string password)
+  {
+    var findUserResult = await FindUserByEmail(email);
+
+    if (findUserResult.IsError)
+    {
+      return findUserResult.Errors;
+    }
+
+    User user = findUserResult.Value;
+
+    if (!CheckPasswordCorrectness(password, user.Password))
+    {
+      return AuthError.PasswordNotCorrect;
+    }
+
+    return MapToSignInResult(user);
+  }
+
+  private async Task<ErrorOr<User>> FindUserByEmail(string email)
   {
     var user = await _userContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
 
-    return MapToSignInResult(user);
+    if (user == null)
+    {
+      return UserError.EmailNotFound;
+    }
 
+    return user;
+  }
+
+  private bool CheckPasswordCorrectness(string password, string hashedPassword)
+  {
+    // Implement actual password comparison logic here
+    return password == hashedPassword;
+  }
+
+  private bool CheckPasswordStrength(string password)
+  {
+    return password.Length >= 12;
   }
 
   private SignInResult MapToSignInResult(User user)
@@ -38,10 +91,11 @@ public class AuthService : IAuthService
         user.FirstName,
         user.LastName,
         user.Email,
-        "kflasl;dkfjjaslk"
-        );
+        "someAccessToken" // Replace with actual token generation logic
+    );
   }
 }
+
 // using Finance.Contract.Users;
 // using Finance.Data;
 // using Finance.Models;
