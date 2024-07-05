@@ -10,6 +10,7 @@ namespace Finance.Services.Auth;
 
 public class AuthService : IAuthService
 {
+  private const int MIN_PASSWORD_STRENGTH = 3;
   private readonly UserContext _userContext;
   private readonly IJwtService _jwtService;
   private readonly IHashService _hashService;
@@ -36,6 +37,7 @@ public class AuthService : IAuthService
     }
 
     user.Password = _hashService.Hash(user.Password);
+
     try
     {
       await _userContext.Users.AddAsync(user);
@@ -83,7 +85,10 @@ public class AuthService : IAuthService
 
   private bool CheckPasswordStrength(string password)
   {
-    return password.Length >= 12;
+    Zxcvbn.Result passwordStrength = Zxcvbn.Core.EvaluatePassword(password);
+
+
+    return passwordStrength.Score >= MIN_PASSWORD_STRENGTH;
   }
 
   private SignInResult MapToSignInResult(User user, string token)
