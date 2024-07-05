@@ -1,6 +1,7 @@
 using ErrorOr;
 using Finance.Data;
 using Finance.Models;
+using Finance.Services.Hashing;
 using Finance.Services.JWT;
 using Microsoft.EntityFrameworkCore;
 using static Finance.Errors.ServiceError;
@@ -11,11 +12,13 @@ public class AuthService : IAuthService
 {
   private readonly UserContext _userContext;
   private readonly IJwtService _jwtService;
+  private readonly IHashService _hashService;
 
-  public AuthService(UserContext userContext, IJwtService jwtService)
+  public AuthService(UserContext userContext, IJwtService jwtService, IHashService hashService)
   {
     _userContext = userContext;
     _jwtService = jwtService;
+    _hashService = hashService;
   }
 
   public async Task<ErrorOr<Created>> Register(User user)
@@ -32,6 +35,7 @@ public class AuthService : IAuthService
       return AuthError.PasswordNotStrong;
     }
 
+    user.Password = _hashService.Hash(user.Password);
     try
     {
       await _userContext.Users.AddAsync(user);
@@ -42,7 +46,7 @@ public class AuthService : IAuthService
       Console.WriteLine(ex.ToString());
     }
 
-    return Result.Created;
+    return ErrorOr.Result.Created;
   }
 
   public async Task<ErrorOr<SignInResult>> SignIn(string email, string password)
@@ -56,7 +60,7 @@ public class AuthService : IAuthService
 
     User user = findUserResult.Value;
 
-    if (!CheckPasswordCorrectness(password, user.Password))
+    if (!_hashService.Verify(password, user.Password))
     {
       return AuthError.PasswordNotCorrect;
     }
@@ -75,12 +79,6 @@ public class AuthService : IAuthService
     }
 
     return user;
-  }
-
-  private bool CheckPasswordCorrectness(string password, string hashedPassword)
-  {
-    // Implement actual password comparison logic here
-    return password == hashedPassword;
   }
 
   private bool CheckPasswordStrength(string password)
