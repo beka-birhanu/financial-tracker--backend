@@ -1,6 +1,7 @@
 using ErrorOr;
 using Finance.Data;
 using Finance.Models;
+using Finance.Services.JWT;
 using Microsoft.EntityFrameworkCore;
 using static Finance.Errors.ServiceError;
 
@@ -9,10 +10,12 @@ namespace Finance.Services.Auth;
 public class AuthService : IAuthService
 {
   private readonly UserContext _userContext;
+  private readonly IJwtService _jwtService;
 
-  public AuthService(UserContext userContext)
+  public AuthService(UserContext userContext, IJwtService jwtService)
   {
     _userContext = userContext;
+    _jwtService = jwtService;
   }
 
   public async Task<ErrorOr<Created>> Register(User user)
@@ -58,7 +61,8 @@ public class AuthService : IAuthService
       return AuthError.PasswordNotCorrect;
     }
 
-    return MapToSignInResult(user);
+    string token = _jwtService.SignToken(user.Id);
+    return MapToSignInResult(user, token);
   }
 
   private async Task<ErrorOr<User>> FindUserByEmail(string email)
@@ -84,14 +88,14 @@ public class AuthService : IAuthService
     return password.Length >= 12;
   }
 
-  private SignInResult MapToSignInResult(User user)
+  private SignInResult MapToSignInResult(User user, string token)
   {
     return new SignInResult(
         user.Id,
         user.FirstName,
         user.LastName,
         user.Email,
-        "someAccessToken" // Replace with actual token generation logic
+        token
     );
   }
 }
