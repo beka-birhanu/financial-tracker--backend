@@ -4,8 +4,8 @@ using Finance.Services.Expenses;
 using Finance.Services.FilterSort;
 using Finance.Services.Pagination;
 using Finance.Services.Auth;
+using Finance.Services.JWT;
 using Microsoft.EntityFrameworkCore;
-
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
   builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
 
   builder.Services.AddScoped<IExpenseService, ExpenseService>();
+  builder.Services.AddScoped<IJwtService, JwtService>();
   builder.Services.AddScoped<IAuthService, AuthService>();
 
   builder.Services.AddScoped<IFilterSortStrategy<Expense>, FilterSortStrategy<Expense>>();
@@ -30,3 +31,4 @@ var app = builder.Build();
   app.MapControllers();
   app.Run();
 }
+
