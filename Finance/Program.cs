@@ -50,6 +50,14 @@ builder.Services.AddAuthentication(options =>
     ValidateIssuerSigningKey = true,
     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
   };
+  options.Events = new JwtBearerEvents
+  {
+    OnMessageReceived = context =>
+    {
+      context.Token = context.Request.Cookies["access-token"];
+      return Task.CompletedTask;
+    }
+  };
 });
 
 var app = builder.Build();
