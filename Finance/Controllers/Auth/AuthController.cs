@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Finance.Services.Auth;
 using ErrorOr;
 using SignInResult = Finance.Services.Auth.SignInResult;
+using Microsoft.Net.Http.Headers;
+using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
 namespace Finance.Controllers.Auth;
 
@@ -40,10 +42,24 @@ public class AuthController : ErrorHandlingBaseController
   {
     var signInResponse = await _authService.SignIn(request.email, request.password);
 
-    return signInResponse.Match(
-        signInData => Ok(MapUserAuthenticationResponse(signInData)),
-        errors => Problem(errors)
-    );
+    if (signInResponse.IsError)
+    {
+      return Problem(signInResponse.Errors);
+    }
+
+    var signInResult = signInResponse.Value;
+    UserAuthenticationResponse authResponse = MapUserAuthenticationResponse(signInResult);
+
+    var cookieOptions = new CookieOptions
+    {
+      HttpOnly = true,
+      Secure = true,
+      SameSite = SameSiteMode.Strict
+    };
+
+    Response.Cookies.Append("access-token", signInResult.Token, cookieOptions);
+
+    return Ok(authResponse);
   }
 
   private UserAuthenticationResponse MapUserAuthenticationResponse(SignInResult result)
@@ -56,5 +72,6 @@ public class AuthController : ErrorHandlingBaseController
         result.Token
     );
   }
+
 }
 
