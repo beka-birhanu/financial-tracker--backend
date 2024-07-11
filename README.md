@@ -200,13 +200,18 @@ Post /users
 201 Created
 ```
 
+**Headers**
+
+```
+Set-Cookie: token
+```
+
 ```json
 {
   "id": "00000000-0000-0000-0000-000000000000",
   "firstName": "Beka",
   "lastName": "Birhanu",
-  "email": "romareo@gmail.com",
-  "token": "afldfkjasdflkjasldf.slfkdjsdflkasdfl.sjadfljasldkfj"
+  "email": "romareo@gmail.com"
 }
 ```
 
@@ -233,13 +238,18 @@ Post /auth/signIn
 200 Ok
 ```
 
+**Headers**
+
+```
+Set-Cookie: token
+```
+
 ```json
 {
   "id": "00000000-0000-0000-0000-000000000000",
   "firstName": "Beka",
   "lastName": "Birhanu",
-  "email": "romareo@gmail.com",
-  "token": "afldfkjasdflkjasldf.slfkdjsdflkasdfl.sjadfljasldkfj"
+  "email": "romareo@gmail.com"
 }
 ```
 
@@ -249,13 +259,6 @@ Post /auth/signIn
 
 ```
 Post /auth/signOut
-```
-
-```json
-{
-  "email": "romareo@gmail.com",
-  "token": "afldfkjasdflkjasldf.slfkdjsdflkasdfl.sjadfljasldkfj"
-}
 ```
 
 #### Response
