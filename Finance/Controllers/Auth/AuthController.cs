@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Finance.Services.Auth;
 using ErrorOr;
 using SignInResult = Finance.Services.Auth.SignInResult;
-using Microsoft.Net.Http.Headers;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
 namespace Finance.Controllers.Auth;
@@ -68,8 +67,7 @@ public class AuthController : ErrorHandlingBaseController
         result.Id,
         result.FirstName,
         result.LastName,
-        result.Email,
-        result.Token
+        result.Email
     );
   }
 
