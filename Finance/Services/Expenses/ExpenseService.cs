@@ -85,7 +85,7 @@ public class ExpenseService : IExpenseService
     }
     else
     {
-      _expenseContext.Entry(existingExpense).CurrentValues.SetValues(expense);
+      _expenseContext.Entry(existingExpense!).CurrentValues.SetValues(expense);
     }
 
     await _expenseContext.SaveChangesAsync();
