@@ -11,7 +11,7 @@ public class FilterSortStrategy<T> : IFilterSortStrategy<T>
       try
       {
         filterValue = filterValue.ToLower();
-        query = query.Where(e => EF.Property<string>(e, filterField).ToLower().Contains(filterValue));
+        query = query.Where(e => e != null && EF.Property<string>(e, filterField).ToLower().Contains(filterValue));
       }
       catch (Exception ex)
       {
@@ -32,11 +32,11 @@ public class FilterSortStrategy<T> : IFilterSortStrategy<T>
 
         if (propertyType == typeof(DateTime))
         {
-          query = query.Where(e => EF.Property<DateTime>(e, filterField).Year == filterValue);
+          query = query.Where(e => e != null && EF.Property<DateTime>(e, filterField).Year == filterValue);
         }
         else
         {
-          query = query.Where(e => EF.Property<int>(e, filterField) == filterValue);
+          query = query.Where(e => e != null && EF.Property<int>(e, filterField) == filterValue);
         }
       }
       catch (Exception ex)
@@ -56,11 +56,11 @@ public class FilterSortStrategy<T> : IFilterSortStrategy<T>
       {
         if (sortOrder == "desc")
         {
-          query = query.OrderByDescending(e => EF.Property<object>(e, sortField));
+          query = query.OrderByDescending(e => EF.Property<object>(e!, sortField));
         }
         else
         {
-          query = query.OrderBy(e => EF.Property<object>(e, sortField));
+          query = query.OrderBy(e => EF.Property<object>(e!, sortField));
         }
       }
       catch (Exception ex)
