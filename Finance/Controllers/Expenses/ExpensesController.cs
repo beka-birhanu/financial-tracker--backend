@@ -7,7 +7,7 @@ using Finance.Services.Pagination;
 
 namespace Finance.Controllers.Expenses;
 
-public class ExpensesController : ErrorHandlingBaseController
+public class ExpensesController : ApiController
 {
   private readonly IExpenseService _expenseService;
 
@@ -123,7 +123,5 @@ public class ExpensesController : ErrorHandlingBaseController
         value: MapExpenseResponse(expense)
     );
   }
-
-
 }
 

@@ -7,7 +7,7 @@ using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
 namespace Finance.Controllers.Auth;
 
-public class AuthController : ErrorHandlingBaseController
+public class AuthController : ApiController
 {
   private readonly IAuthService _authService;
 

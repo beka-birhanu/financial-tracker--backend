@@ -6,8 +6,11 @@ namespace Finance.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public abstract class ErrorHandlingBaseController : ControllerBase
+public abstract class ApiController : ControllerBase
 {
+  // TODO: implement this that can sinitize all inputs of type IUserInput 
+  // protected IActionResult Sanitize(UserInput userInput) { }
+
   protected IActionResult Problem(List<Error> errors)
 
   {
